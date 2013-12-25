@@ -1,6 +1,3 @@
-# this should be at the top with the other import statements
-import serial
-
 # this new class should probably live underneath the CWOP class
 #
 #===============================================================================
@@ -54,11 +51,6 @@ class APRS(REST):
         Setting it to zero will cause every archive record to be posted.
         """
         self.site      = site
-        self.port      = kwargs['port']
-        self.baudrate  = int(kwargs['baudrate'])
-        self.databits  = int(kwargs['databits'])
-        self.parity    = kwargs['parity']
-        self.stopbits  = int(kwargs['stopbits'])
         self.station   = kwargs['station'].upper()
         self.unproto   = kwargs['unproto']
         self.status_message   = kwargs['status_message']
@@ -69,6 +61,7 @@ class APRS(REST):
         self.interval  = int(kwargs.get('interval', 0))
         self.stale     = int(kwargs.get('stale', 1800))
         self.max_tries = int(kwargs.get('max_tries', 3))
+        self.path      = kwargs['path']
         
         self._lastpost = None
         
@@ -111,34 +104,9 @@ class APRS(REST):
         # Get the login and packet strings:
         _tnc_packet = self.getTNCPacket(_record)
 
-        # Send packet to serial port
-        _ser = serial.Serial(self.port)
-        _ser.baudrate = self.baudrate
-        _ser.bytesize = self.databits
-        _ser.parity = self.parity
-        _ser.stopbits = self.stopbits
-        _ser.flushOutput()
-        _ser.flushInput()
-        # put the tnc in command mode, equivalent to ctrl-C
-        _ser.write("\x03")
-        time.sleep(1)
-        _ser.write("mycall " + self.station + "\r")
-        time.sleep(1)
-        _ser.write("unproto " + self.unproto + "\r")
-        time.sleep(1)
-        _ser.write("conv\r")
-        time.sleep(1)
-        _ser.write(_tnc_packet + "\r")
-        time.sleep(1)
-        _ser.write(">" + self.status_message + "\r")
-        _ser.write("\x03")
-        _ser.flushInput()
-        _ser.flushOutput()
-
-        try:
-            _ser.close()
-        except:
-            pass
+        # Write the packet to a file
+        with open(self.path, 'w') as f:
+            f.write(_tnc_packet)
 
         self._lastpost = time_ts
         
@@ -200,8 +168,10 @@ class APRS(REST):
         # Station hardware:
         hardware_str = ".DsVP" if self.hardware=="VantagePro" else ".Unkn"
         
-        tnc_packet = time_str + latlon_str + wt_str + rain_str +\
-                     baro_str + humid_str + radiation_str + hardware_str
+        tnc_packet = time_str + latlon_str + wt_str +\
+                     baro_str + humid_str + radiation_str
+                     # These two don't seem to be working properly for me, so I'm commenting them out for now
+                     # rain_str + hardware_str
 
         return tnc_packet
 
