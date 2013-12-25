@@ -1,15 +1,18 @@
 This is a quick add-on for the Weewx system to allow it to send APRS weather
-packets to a radio TNC connected to the same server as the weather station.
-
-This is the first time I've coded in Python, and I don't have much experience
-with programming serial ports, so I'm sure this could be much better. Also,
-the commands and behaviors of different TNCs can have enough variance that I
-don't know how useful this will be for others.
+packets to a file, for use by APRX as a packet comment. It is based on the 
+addon by bradmc, which communicated directly with a TNC.
 
 This was created using Weewx version 1.13.1, and has also been tested with
 version 1.14.1. The author has indicated that there will be a more modular
 facility for adding RESTful protocols in a future release, so this code
 will probably be obsolete before long.
+It has also been tested successfully with Weewx version 2.5.0.
+
+Paths:
+I installed this on a Debian box. The relevant files for modification are:
+/etc/weewx/weewx.conf
+/usr/share/weewx/weewx/restful.py
+/etc/aprx.conf
 
 Please send any improvements to Brad McConahay at brad@mcconahay.com.
 
