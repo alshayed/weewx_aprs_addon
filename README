@@ -18,3 +18,19 @@ Please send any improvements to Brad McConahay at brad@mcconahay.com.
 
 Weewx is an excellent weather station system written in Python by Tom Keffer.
 http://www.weewx.com
+
+
+-- Forked by bwasserm (https://github.com/bwasserm)
+
+
+-- Forked by Brandon Peterson (https://github.com/bspeterson)
+
+    Modified to work with weewx 2.6.3, now uses weewx/bin/weewx/restx.py instead of restful.py
+
+    Sample beacon for APRX:
+
+        <beacon>
+            beaconmode radio
+            cycle-size 16m
+            beacon srccall "MYCALL-13" dstcall "APRS" via "RFONLY" file "/tmp/weewx-aprs.txt"
+        </beacon>
