@@ -215,7 +215,7 @@ class APRSThread(RESTThread):
         
         _tnc_packet = ''.join([_prefix, _time_str, _latlon_str, _wt_str,
                                _rain_str, _baro_str, _humid_str,
-                               _radiation_str, _equipment_str, "\r\n"])
+                               _radiation_str, _equipment_str, "\n"])
 
         return _tnc_packet
 
